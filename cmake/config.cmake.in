@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+set(DEPENDENCIES @DEPENDENCIES@)
+
+foreach(DEPENDENCY ${DEPENDENCIES})
+    find_dependency(${DEPENDENCY})
+endforeach()
+
+include("${CMAKE_CURRENT_LIST_DIR}/tbaricault_@NAME@-targets.cmake")
