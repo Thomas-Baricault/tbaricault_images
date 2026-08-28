@@ -1,0 +1,30 @@
+set(FILES "
+@FILES@
+")
+
+string(REGEX REPLACE "\n" ";" FILES "${FILES}")
+
+foreach(FILE ${FILES})
+    if(EXISTS "${FILE}" OR IS_SYMLINK "${FILE}")
+        message(STATUS "Removing ${FILE}")
+        file(REMOVE "${FILE}")
+    endif()
+endforeach()
+
+foreach(FILE ${FILES})
+    get_filename_component(DIR "${FILE}" DIRECTORY)
+    while(NOT DIR STREQUAL "" AND NOT DIR STREQUAL "/")
+        file(GLOB children "${DIR}/*")
+
+        if(children)
+            break()
+        endif()
+
+        if(EXISTS "${DIR}")
+            message(STATUS "Removing empty directory ${DIR}")
+            file(REMOVE_RECURSE "${DIR}")
+        endif()
+
+        get_filename_component(DIR "${DIR}" DIRECTORY)
+    endwhile()
+endforeach()
